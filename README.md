@@ -1,7 +1,7 @@
 # b64html
 base64 data png to src convert
 
-#convert base64 png data image to file
+# Convert base64 png data image to file
 
 This script automatically converts base64 data image into image file saves it in the disc with
 default path `blob`
