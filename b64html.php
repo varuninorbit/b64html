@@ -1,14 +1,15 @@
 <?php
+
 class base64png
-{
-    function __construct($str)
+{    
+    function __construct($str, $path = 'blob')
     {
         $this->str = $str;
-        $this->path = 'blob';
-        $this->imagePaths=[];
+        $this->path = $path;
+        $this->imagePaths = [];
     }
 
-    function imagesArray($str)
+    private function imagesArray($str)
     {
         $re = '/src="data:image\/png;base64,(.*?)"/m';
         preg_match_all($re, $str, $matches, PREG_SET_ORDER, 0);
@@ -18,7 +19,7 @@ class base64png
         }, $matches);
     }
 
-    function saveImagesFromArray($imgArray)
+    private function saveImagesFromArray($imgArray)
     {
         return array_map(function ($png) {       //names array of files after saving
             return $this->base64_to_png_file($png);
@@ -26,7 +27,7 @@ class base64png
     }
 
 
-    function base64_to_png_file($base64_string)
+    private function base64_to_png_file($base64_string)
     {
         $output_file_path = "$this->path/" . md5($base64_string) . ".png";
         $ifp = fopen($output_file_path, 'wb');
@@ -36,7 +37,7 @@ class base64png
     }
 
 
-    function splitImgStringForSrc($str)
+    private function splitImgStringForSrc($str)
     {
         $re = '/src="data:image\/png;base64,(.*?)"/m';
         $subst = '_sPlIt_';
@@ -46,7 +47,7 @@ class base64png
         return explode("_sPlIt_", $result);
     }
 
-    function insertSrcUrl($array, $fileNames)
+    private function insertSrcUrl($array, $fileNames)
     {
         $str2 = "";
         for ($i = 0; $i < (count($array) - 1); $i++) {
@@ -58,14 +59,14 @@ class base64png
         return $str2;
     }
 
-    function srcHTML(){     
-    
+    function get()
+    {
+
         $finalStr = $this->insertSrcUrl(
             $this->splitImgStringForSrc($this->str),
             $this->imagePaths = $this->saveImagesFromArray($this->imagesArray($this->str))
         );
-    
-        return $finalStr;
-    }  
 
+        return $finalStr;
+    }
 }
